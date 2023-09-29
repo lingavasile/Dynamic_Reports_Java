@@ -74,11 +74,11 @@ public class CrossTabReport {
 
         try {
             DRDataSource dataSource = new DRDataSource("country","month","quantity");
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://CEDINT859;databaseName=HolydaysDate;integratedSecurity=true;trustServerCertificate=true";
             Connection conn = DriverManager.getConnection(url);
-
             Statement sta = conn.createStatement();
+
             for (int i = 1; i <= 12;i++){
                 String sqlMonth = "select Country,Count(Country) as Total from Holydays where Month(Date) ="+i+" group by Country";
                 ResultSet rsMonth = sta.executeQuery(sqlMonth);
@@ -86,9 +86,6 @@ public class CrossTabReport {
                     while (rsMonth.next()) {
                         dataSource.add(rsMonth.getString("Country"),i,Integer.parseInt(rsMonth.getString("Total")));
                     }
-                }else {
-                    dataSource.add("Italia",i,0);
-                    dataSource.add("Moldavia",i,0);
                 }
 
             }

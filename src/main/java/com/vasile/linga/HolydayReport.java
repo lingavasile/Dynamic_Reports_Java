@@ -1,6 +1,5 @@
 package com.vasile.linga;
 
-import com.google.common.io.Resources;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment;
@@ -20,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static com.google.common.io.Resources.*;
 import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 
 
@@ -41,7 +41,7 @@ public class HolydayReport {
             StyleBuilder columnStyle = stl.style()
                     .setBorder(stl.pen1Point())
                     .setPadding(5);
-            BufferedImage img = null;
+            BufferedImage img;
             img = ImageIO.read(getFile("holydaays.png"));
             report()
                     .title(
@@ -68,7 +68,7 @@ public class HolydayReport {
     }
 
     public static File getFile(String name) {
-        URL url = Resources.getResource(name);
+        URL url = getResource(name);
         File file = null;
         try {
             file = new File(url.toURI());
@@ -83,7 +83,7 @@ public class HolydayReport {
 
         try {
             DRDataSource dataSource = new DRDataSource("country","name","date");
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://CEDINT859;databaseName=HolydaysDate;integratedSecurity=true;trustServerCertificate=true";
             Connection conn = DriverManager.getConnection(url);
 
