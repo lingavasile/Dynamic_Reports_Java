@@ -37,12 +37,15 @@ public class HolydayReport {
             StyleBuilder boldRightStyle = stl.style(boldStyle).setHorizontalTextAlignment(HorizontalTextAlignment.RIGHT);
             StyleBuilder columnTitleStyle = stl.style(boldLeftStyle)
                                                 .setBorder(stl.pen1Point())
-                                                .setBackgroundColor(Color.CYAN).setPadding(5);
+                                                .setBackgroundColor(Color.CYAN).setPadding(5).setFontSize(13);
+            StyleBuilder columnStyle = stl.style()
+                    .setBorder(stl.pen1Point())
+                    .setPadding(5);
             BufferedImage img = null;
             img = ImageIO.read(getFile("holydaays.png"));
             report()
                     .title(
-                            cmp.text("Holydays").setStyle(boldLeftStyle),
+                            cmp.text("Holydays").setStyle(boldLeftStyle).setStyle(stl.style().setFontSize(15)),
                             cmp.image(img).setDimension(50,50).setHorizontalImageAlignment(HorizontalImageAlignment.RIGHT),
                             cmp.verticalGap(5))
 
@@ -50,7 +53,8 @@ public class HolydayReport {
                             col.column("Country","country",type.stringType()),
                             col.column("Name","name",type.stringType()),
                             col.column("Date","date",type.stringType()))
-                    .setColumnTitleStyle(columnTitleStyle)
+                    .setColumnTitleStyle(columnTitleStyle.setPadding(8))
+                    .setColumnStyle(columnStyle.setPadding(5))
                     .highlightDetailEvenRows()
                     .pageFooter(cmp.pageXofY().setStyle(boldRightStyle))
                     .setDataSource(createDataSource())
