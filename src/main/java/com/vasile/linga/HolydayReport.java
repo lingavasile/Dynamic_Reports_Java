@@ -1,6 +1,5 @@
 package com.vasile.linga;
 
-import com.google.common.io.Resources;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment;
@@ -20,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static com.google.common.io.Resources.*;
 import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 
 
@@ -37,12 +37,15 @@ public class HolydayReport {
             StyleBuilder boldRightStyle = stl.style(boldStyle).setHorizontalTextAlignment(HorizontalTextAlignment.RIGHT);
             StyleBuilder columnTitleStyle = stl.style(boldLeftStyle)
                                                 .setBorder(stl.pen1Point())
-                                                .setBackgroundColor(Color.CYAN).setPadding(5);
-            BufferedImage img = null;
+                                                .setBackgroundColor(Color.CYAN).setPadding(5).setFontSize(13);
+            StyleBuilder columnStyle = stl.style()
+                    .setBorder(stl.pen1Point())
+                    .setPadding(5);
+            BufferedImage img;
             img = ImageIO.read(getFile("holydaays.png"));
             report()
                     .title(
-                            cmp.text("Holydays").setStyle(boldLeftStyle),
+                            cmp.text("Holydays").setStyle(boldLeftStyle).setStyle(stl.style().setFontSize(15)),
                             cmp.image(img).setDimension(50,50).setHorizontalImageAlignment(HorizontalImageAlignment.RIGHT),
                             cmp.verticalGap(5))
 
@@ -50,7 +53,8 @@ public class HolydayReport {
                             col.column("Country","country",type.stringType()),
                             col.column("Name","name",type.stringType()),
                             col.column("Date","date",type.stringType()))
-                    .setColumnTitleStyle(columnTitleStyle)
+                    .setColumnTitleStyle(columnTitleStyle.setPadding(8))
+                    .setColumnStyle(columnStyle.setPadding(5))
                     .highlightDetailEvenRows()
                     .pageFooter(cmp.pageXofY().setStyle(boldRightStyle))
                     .setDataSource(createDataSource())
@@ -64,7 +68,7 @@ public class HolydayReport {
     }
 
     public static File getFile(String name) {
-        URL url = Resources.getResource(name);
+        URL url = getResource(name);
         File file = null;
         try {
             file = new File(url.toURI());
@@ -79,7 +83,7 @@ public class HolydayReport {
 
         try {
             DRDataSource dataSource = new DRDataSource("country","name","date");
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://CEDINT859;databaseName=HolydaysDate;integratedSecurity=true;trustServerCertificate=true";
             Connection conn = DriverManager.getConnection(url);
 
